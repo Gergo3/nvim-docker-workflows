@@ -23,6 +23,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Compute cache scope
+        id: scope
+        run: |
+          REF="${GITHUB_REF_NAME}"
+          if [[ "$REF" =~ ^v([0-9]+)\. ]]; then
+            MAJOR="${BASH_REMATCH[1]}"
+            echo "scope=${{ inputs.image-name }}-v${MAJOR}" >> $GITHUB_OUTPUT
+          else
+            echo "scope=${{ inputs.image-name }}-${REF}" >> $GITHUB_OUTPUT
+          fi
+          echo "Cache scope: $(cat $GITHUB_OUTPUT)"
+
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -36,5 +48,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          pull: true
+          cache-from: type=gha,scope=${{ steps.scope.outputs.scope }}
+          cache-to: type=gha,mode=max,scope=${{ steps.scope.outputs.scope }},mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
