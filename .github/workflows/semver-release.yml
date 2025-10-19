@@ -1,0 +1,41 @@
+name: Reusable Semantic Version Release
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-stable:
+    uses: ./.github/workflows/reusable-update-stable.yml
+    with:
+      tag-name: ${{ github.ref_name }}
+
+  build-image:
+    needs: update-stable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract version info
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}" # strip 'v' prefix
+          MAJOR=$(echo "$TAG" | cut -d. -f1)
+          MINOR=$(echo "$TAG" | cut -d. -f2)
+          echo "full=v${TAG}" >> $GITHUB_OUTPUT
+          echo "major=v${MAJOR}" >> $GITHUB_OUTPUT
+          echo "minor=v${MAJOR}.${MINOR}" >> $GITHUB_OUTPUT
+
+      - name: Call reusable Docker build
+        uses: ./.github/workflows/reusable-docker-build.yml
+        with:
+          image-name: ${{ inputs.image-name }}
+          image-tags: |
+            type=raw,value=${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
+            type=raw,value=${{ steps.version.outputs.major }}
+            type=raw,value=latest
+
