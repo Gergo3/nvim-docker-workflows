@@ -1,0 +1,37 @@
+name: Update Stable Branch
+
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        required: true
+        type: string
+
+permissions:
+  contents: write   # Needed to push branch updates
+
+jobs:
+  update-stable:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # important for accessing all tags and branches
+
+      - name: Update stable branch to latest tag
+        env:
+          TAG_REF: ${{ inputs.tag-name }}
+        run: |
+          echo "Updating stable branch to point to $TAG_REF"
+
+          # Configure Git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Checkout or create the stable branch at the new tag
+          git checkout -B stable $TAG_REF
+
+          # Push stable branch to origin
+          git push origin stable --force
