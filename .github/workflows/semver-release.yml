@@ -38,4 +38,5 @@ jobs:
             type=raw,value=${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
             type=raw,value=${{ steps.version.outputs.major }}
             type=raw,value=latest
+        secrets: inherit
 
