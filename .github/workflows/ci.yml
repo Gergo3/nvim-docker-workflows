@@ -54,7 +54,7 @@ jobs:
     needs: detect
     uses: ./.github/workflows/reusable-docker-build.yml
     with:
-      image-name: ${{ secrets.IMAGE-NAME }}
+      image-name: ${{ secrets.IMAGE_NAME }}
       image-tags: dev
     secrets: inherit
 
