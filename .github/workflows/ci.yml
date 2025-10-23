@@ -50,7 +50,7 @@ jobs:
   build-latest:
     if: ${{ needs.detect.outputs.is-tag == 'false' && needs.detect.outputs.is-master == 'true' }}
     needs: detect
-    uses: ./.github/workflows/reusable-docker-build.yml
+    uses: ./.github/workflows/docker-build.yml
     with:
       image-name: ${{ vars.IMAGE_NAME }}
       image-tags: dev
@@ -60,7 +60,7 @@ jobs:
   release:
     if: ${{ needs.detect.outputs.is-valid-semver == 'true' }}
     needs: detect
-    uses: ./.github/workflows/reusable-semver-release.yml
+    uses: ./.github/workflows/semver-release.yml
     with:
       image-name: ${{ vars.IMAGE_NAME }}
     secrets: inherit

@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   update-stable:
-    uses: ./.github/workflows/reusable-update-stable.yml
+    uses: ./.github/workflows/update-stable.yml
     with:
       tag-name: ${{ github.ref_name }}
 
@@ -31,7 +31,7 @@ jobs:
           echo "minor=v${MAJOR}.${MINOR}" >> $GITHUB_OUTPUT
 
       - name: Call reusable Docker build
-        uses: ./.github/workflows/reusable-docker-build.yml
+        uses: ./.github/workflows/docker-build.yml
         with:
           image-name: ${{ inputs.image-name }}
           image-tags: |
