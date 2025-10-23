@@ -64,6 +64,6 @@ jobs:
     needs: detect
     uses: ./.github/workflows/reusable-semver-release.yml
     with:
-      image-name: ${{ secrets.IMAGE-NAME }}
+      image-name: ${{ secrets.IMAGE_NAME }}
     secrets: inherit
 
