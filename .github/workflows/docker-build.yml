@@ -10,11 +10,7 @@ on:
         required: false
         type: string
         default: latest
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
+    secrets: inherit
 jobs:
   build:
     runs-on: ubuntu-latest
