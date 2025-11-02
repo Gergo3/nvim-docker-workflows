@@ -1,0 +1,33 @@
+name: 'Update Stable Branch'
+description: 'Updates the stable branch to point to a given tag'
+
+inputs:
+  tag-name:
+    description: 'Git tag to point the stable branch to'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+#    - name: Checkout repository
+#      uses: actions/checkout@v4
+#      with:
+#        fetch-depth: 0  # fetch all tags and branches
+
+    - name: Update stable branch
+      shell: bash
+      env:
+        TAG_REF: ${{ inputs.tag-name }}
+      run: |
+        echo "Updating stable branch to point to $TAG_REF"
+
+        # Configure Git identity for commit/push
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Checkout or create the stable branch at the given tag
+        git checkout -B stable "$TAG_REF"
+
+        # Push stable branch to origin (force update)
+        git push origin stable --force
+
