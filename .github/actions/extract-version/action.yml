@@ -1,0 +1,28 @@
+name: 'Extract Version Info'
+description: 'Parses the current Git tag into full, major, and minor versions'
+author: 'Your Name or Org'
+
+inputs: {}
+outputs:
+  full:
+    description: 'Full version (e.g. v1.2.3)'
+  major:
+    description: 'Major version (e.g. v1)'
+  minor:
+    description: 'Minor version (e.g. v1.2)'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Extract version info
+      id: version
+      shell: bash
+      run: |
+        TAG="${GITHUB_REF_NAME#v}"  # strip 'v' prefix if present
+        MAJOR=$(echo "$TAG" | cut -d. -f1)
+        MINOR=$(echo "$TAG" | cut -d. -f2)
+
+        echo "full=v${TAG}" >> "$GITHUB_OUTPUT"
+        echo "major=v${MAJOR}" >> "$GITHUB_OUTPUT"
+        echo "minor=v${MAJOR}.${MINOR}" >> "$GITHUB_OUTPUT"
+
