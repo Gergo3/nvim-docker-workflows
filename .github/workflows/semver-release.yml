@@ -2,41 +2,42 @@ name: Reusable Semantic Version Release
 
 on:
   workflow_call:
-    inputs:
-      image-name:
-        required: true
-        type: string
 
 permissions:
   contents: write
 
 jobs:
   update-stable:
-    uses: ./.github/workflows/update-stable.yml
-    with:
-      tag-name: ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for tags and branches
+
+      - name: Update stable branch
+        uses: ./.github/actions/update-stable
+        with:
+          tag-name: ${{ github.ref_name }}
 
   build-image:
     needs: update-stable
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Extract version info
         id: version
-        run: |
-          TAG="${GITHUB_REF_NAME#v}" # strip 'v' prefix
-          MAJOR=$(echo "$TAG" | cut -d. -f1)
-          MINOR=$(echo "$TAG" | cut -d. -f2)
-          echo "full=v${TAG}" >> $GITHUB_OUTPUT
-          echo "major=v${MAJOR}" >> $GITHUB_OUTPUT
-          echo "minor=v${MAJOR}.${MINOR}" >> $GITHUB_OUTPUT
+        uses: ./.github/actions/extract-version
 
-      - name: Call reusable Docker build
-        uses: ./.github/workflows/docker-build.yml
+      - name: Build and push Docker image
+        uses: ./.github/actions/docker-build
         with:
-          image-name: ${{ inputs.image-name }}
+          image-name: ${{ vars.IMAGE_NAME }}
           image-tags: |
             type=raw,value=${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
             type=raw,value=${{ steps.version.outputs.major }}
             type=raw,value=latest
-        secrets: inherit
-
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}

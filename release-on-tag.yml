@@ -1,0 +1,17 @@
+name: Release on Tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Matches semantic version tags like v1.2.3
+
+permissions:
+  contents: write  # Required for updating branches
+
+jobs:
+  semantic-release:
+    uses: ./.github/workflows/semantic-version-release.yml
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
