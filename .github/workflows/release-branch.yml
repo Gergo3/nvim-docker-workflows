@@ -1,0 +1,40 @@
+name: Reusable Branch Docker Build
+
+on:
+  workflow_call:
+    secrets:
+
+permissions:
+  contents: read  # Checkout requires this
+  packages: write # Allows Docker pushes to registries if needed
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine image tag
+        id: tag
+        shell: bash
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          if [ "$BRANCH" = "master" ]; then
+            TAG="dev"
+          else
+            # sanitize branch name for Docker tags (replace / with -)
+            TAG="${BRANCH//\//-}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Computed image tag: $TAG"
+
+      - name: Build and push Docker image
+        uses: ./.github/actions/docker-build
+        with:
+          image-name: ${{ vars.IMAGE_NAME }}
+          image-tags: type=raw,value=${{ steps.tag.outputs.tag }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+
