@@ -10,8 +10,7 @@ permissions:
 
 jobs:
   semantic-release:
-    uses: ./.github/workflows/semantic-version-release.yml
+    uses: ./.github/workflows/semver-release.yml
     secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      inherit
 
