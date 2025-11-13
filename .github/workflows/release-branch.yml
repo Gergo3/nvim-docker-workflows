@@ -3,6 +3,10 @@ name: Reusable Branch Docker Build
 on:
   workflow_call:
     secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
 
 permissions:
   contents: read  # Checkout requires this
