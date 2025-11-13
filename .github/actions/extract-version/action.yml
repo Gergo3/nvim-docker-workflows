@@ -6,13 +6,10 @@ inputs: {}
 outputs:
     full:
     description: 'Full version (e.g. v1.2.3)'
-    value: ${{ steps.extract.outputs.full }}
   major:
     description: 'Major version (e.g. v1)'
-    value: ${{ steps.extract.outputs.major }}
   minor:
     description: 'Minor version (e.g. v1.2)'
-    value: ${{ steps.extract.outputs.minor }}
 
 runs:
   using: "composite"
@@ -24,6 +21,10 @@ runs:
         TAG="${GITHUB_REF_NAME#v}"  # strip 'v' prefix if present
         MAJOR=$(echo "$TAG" | cut -d. -f1)
         MINOR=$(echo "$TAG" | cut -d. -f2)
+
+        echo $TAG
+        echo $MAJOR
+        echo $MINOR
 
         echo "full=v${TAG}" >> "$GITHUB_OUTPUT"
         echo "major=v${MAJOR}" >> "$GITHUB_OUTPUT"
