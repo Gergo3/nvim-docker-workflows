@@ -41,7 +41,7 @@ jobs:
         with:
           image-name: ${{ vars.IMAGE_NAME }}
           image-tags: |
-            type=raw,value=${{ steps.version.outputs.major }}.${{ steps.version.outputs.minor }}
+            type=raw,value=${{ steps.version.outputs.minor }}
             type=raw,value=${{ steps.version.outputs.major }}
             type=raw,value=latest
           dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}

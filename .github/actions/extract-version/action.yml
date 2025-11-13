@@ -4,12 +4,15 @@ author: 'Your Name or Org'
 
 inputs: {}
 outputs:
-  full:
+    full:
     description: 'Full version (e.g. v1.2.3)'
+    value: ${{ steps.extract.outputs.full }}
   major:
     description: 'Major version (e.g. v1)'
+    value: ${{ steps.extract.outputs.major }}
   minor:
     description: 'Minor version (e.g. v1.2)'
+    value: ${{ steps.extract.outputs.minor }}
 
 runs:
   using: "composite"
