@@ -35,7 +35,7 @@ jobs:
           echo "Computed image tag: $TAG"
 
       - name: Build and push Docker image
-        uses: ./.github/actions/docker-build
+        uses: Gergo3/nvim-docker-workflows/.github/actions/docker-build@master
         with:
           image-name: ${{ vars.IMAGE_NAME }}
           image-tags: type=raw,value=${{ steps.tag.outputs.tag }}

@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0  # Required for tags and branches
 
       - name: Update stable branch
-        uses: ./.github/actions/update-stable
+        uses: Gergo3/nvim-docker-workflows/.github/actions/update-stable@master
         with:
           tag-name: ${{ github.ref_name }}
 
@@ -34,10 +34,10 @@ jobs:
 
       - name: Extract version info
         id: version
-        uses: ./.github/actions/extract-version
+        uses: Gergo3/nvim-docker-workflows/.github/actions/extract-version@master
 
       - name: Build and push Docker image
-        uses: ./.github/actions/docker-build
+        uses: Gergo3/nvim-docker-workflows/.github/actions/docker-build@master
         with:
           image-name: ${{ vars.IMAGE_NAME }}
           image-tags: |
