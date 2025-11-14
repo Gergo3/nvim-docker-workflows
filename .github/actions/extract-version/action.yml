@@ -3,6 +3,16 @@ description: 'Parses the current Git tag into full, major, and minor versions'
 author: 'Your Name or Org'
 
 inputs: {}
+outputs:
+  full:
+    description: "Full version (major.minor.patch)"
+    value: ${{ steps.version.outputs.full }}
+  major:
+    description: "Major version (major)"
+    value: ${{ steps.version.outputs.major }}
+  minor:
+    description: "Minor version (major.minor)"
+    value: ${{ steps.version.outputs.minor }}
 
 runs:
   using: "composite"
