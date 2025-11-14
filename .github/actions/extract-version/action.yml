@@ -3,13 +3,6 @@ description: 'Parses the current Git tag into full, major, and minor versions'
 author: 'Your Name or Org'
 
 inputs: {}
-outputs:
-    full:
-    description: 'Full version (e.g. v1.2.3)'
-  major:
-    description: 'Major version (e.g. v1)'
-  minor:
-    description: 'Minor version (e.g. v1.2)'
 
 runs:
   using: "composite"
